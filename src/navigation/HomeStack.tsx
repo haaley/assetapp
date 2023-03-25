@@ -11,7 +11,11 @@ const {Navigator, Screen} = createNativeStackNavigator();
 export default function HomeStack() {
   return (
     <Navigator>
-      <Screen name={Routes.HomeScreen} component={HomeScreen} />
+      <Screen
+        name={Routes.HomeScreen}
+        component={HomeScreen}
+        options={{headerShown: false}}
+      />
       <Screen name={Routes.AssetScreen} component={AssetScreen} />
     </Navigator>
   );
