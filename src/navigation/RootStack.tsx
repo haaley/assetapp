@@ -9,8 +9,8 @@ const {Navigator, Screen} = createNativeStackNavigator();
 export default function RootStack() {
   return (
     <Navigator screenOptions={{headerShown: false}}>
-      <Screen name={'MainStack'} component={MainTabs} />
       <Screen name={'LoginStack'} component={LoginStack} />
+      <Screen name={'MainStack'} component={MainTabs} />
     </Navigator>
   );
 }
