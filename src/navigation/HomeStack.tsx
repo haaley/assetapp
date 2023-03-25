@@ -10,7 +10,6 @@ import {Icon, Layout, Text, Button} from '@ui-kitten/components';
 const {Navigator, Screen} = createNativeStackNavigator();
 
 const customHeader = (props: any) => {
-  console.log(props);
   return (
     <Layout
       style={{

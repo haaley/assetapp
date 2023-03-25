@@ -18,9 +18,6 @@ const SigninScreen = () => {
     if (isLoggedIn) {
       navigation.replace('MainStack');
     }
-    console.log({error});
-    console.log({isLoggedIn});
-    console.log({user});
   }, [isLoggedIn, error, navigation, user]);
 
   return (
