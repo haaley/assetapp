@@ -8,14 +8,14 @@ import {
 } from '@ui-kitten/components';
 import React from 'react';
 
+import AvatarSVG from '../assets/images/avatar.svg';
+
+const avatarImage = () => <AvatarSVG width={35} />;
 const Header = ({eva}: any) => {
   return (
     <Layout style={eva.style.wrapper}>
       <Layout style={eva.style.container}>
-        <Avatar
-          style={eva.style.avatar}
-          source={{uri: 'https://pic.onlinewebfonts.com/svg/img_173956.png'}}
-        />
+        <Avatar style={eva.style.avatar} ImageComponent={avatarImage} />
         <Text category={'label'} style={eva.style.textStyle}>
           Account: $1,457.23
         </Text>
@@ -78,12 +78,12 @@ export default withStyles(Header, () => ({
     justifyContent: 'center',
   },
   iconStyle: {
-    height: 40,
-    width: 40,
+    height: 30,
+    width: 30,
   },
   avatar: {
-    width: 40,
-    height: 40,
+    width: 30,
+    height: 30,
   },
   textStyle: {
     fontSize: 16,

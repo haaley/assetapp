@@ -13,13 +13,32 @@ const data3 = [100, 140, 200, 300, 24, 67, 512, 432, 33, 120, 324, 230, 210];
 interface FundData {
   data: number[];
   title: string;
+  shortName: string;
   value: string;
   variation: string;
 }
 const data: FundData[] = [
-  {data: data1, title: 'Wind Fund', value: '$1322,67', variation: '13.88%'},
-  {data: data2, title: 'Sun Fund', value: '$476,20', variation: '33.42%'},
-  {data: data3, title: 'Rain Fund', value: '$319,41', variation: '6.13%'},
+  {
+    data: data1,
+    title: 'Wind Fund',
+    shortName: 'WFND',
+    value: '$1322,67',
+    variation: '13.88%',
+  },
+  {
+    data: data2,
+    title: 'Sun Fund',
+    shortName: 'SFND',
+    value: '$476,20',
+    variation: '33.42%',
+  },
+  {
+    data: data3,
+    title: 'Rain Fund',
+    shortName: 'RFND',
+    value: '$319,41',
+    variation: '6.13%',
+  },
 ];
 
 const HomeScreen = ({eva}: any) => {
