@@ -1,16 +1,22 @@
 import {useNavigation, useTheme} from '@react-navigation/native';
+import {unwrapResult} from '@reduxjs/toolkit';
 import {
   Button,
   CheckBox,
   Icon,
   Input,
   Layout,
+  StyleService,
   Text,
 } from '@ui-kitten/components';
-import {Dimensions, StyleSheet} from 'react-native';
 import React, {useEffect, useState} from 'react';
+import {Dimensions} from 'react-native';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import {useDispatch, useSelector} from 'react-redux';
+import PasswordField from '../components/PasswordField';
 import {Routes} from '../navigation/Routes';
+import {register} from '../redux/reducers/authSlice';
+import {validateEmail} from '../util';
 
 const height = Dimensions.get('screen').height;
 const SignupScreen = () => {
@@ -21,14 +27,33 @@ const SignupScreen = () => {
   const [checked, setChecked] = useState(false);
   const navigation = useNavigation<any>();
   const [successful, setSuccessful] = useState(false);
+  const {isLoggedIn} = useSelector((state: any) => state.auth);
+
+  const [invalidEmail, setInvalidEmail] = useState(false);
+  const dispatch = useDispatch<any>();
+
   const theme = useTheme();
 
   useEffect(() => {
     const navigateToSignin = () => navigation.navigate(Routes.SigninScreen);
+    const navigateToMainStack = () => navigation.replace('MainStack');
     if (successful === true) {
       setTimeout(() => navigateToSignin(), 3000);
     }
-  }, [navigation, successful]);
+    if (isLoggedIn) {
+      navigateToMainStack();
+    }
+  }, [navigation, successful, isLoggedIn]);
+
+  const renderCaption = (caption: string) => {
+    return (
+      <Layout style={styles.captionContainer}>
+        <Text style={styles.captionText} status="danger">
+          {caption}
+        </Text>
+      </Layout>
+    );
+  };
 
   return (
     <KeyboardAwareScrollView enableOnAndroid>
@@ -39,6 +64,7 @@ const SignupScreen = () => {
             <Input
               style={styles.inputField}
               value={firstName}
+              autoCapitalize={'none'}
               textContentType={'name'}
               onChangeText={nextValue => setFirstName(nextValue)}
               placeholder="Enter your first name"
@@ -55,18 +81,28 @@ const SignupScreen = () => {
             <Input
               style={styles.inputField}
               value={email}
+              autoCapitalize={'none'}
               textContentType={'emailAddress'}
-              onChangeText={nextValue => setEmail(nextValue)}
+              caption={
+                invalidEmail && email
+                  ? renderCaption('Your email is invalid')
+                  : undefined
+              }
+              onChangeText={nextValue => {
+                setEmail(nextValue);
+                if (!validateEmail(nextValue)) {
+                  setInvalidEmail(true);
+                } else {
+                  setInvalidEmail(false);
+                }
+              }}
               placeholder="Enter your e-mail"
               label="E-mail"
             />
-            <Input
-              style={styles.inputField}
-              value={password}
-              textContentType={'password'}
+            <PasswordField
+              password={password}
+              showCaption
               onChangeText={nextValue => setPassword(nextValue)}
-              placeholder="Minimum 8 characters"
-              label="Password"
             />
             <CheckBox
               checked={checked}
@@ -82,13 +118,32 @@ const SignupScreen = () => {
             </CheckBox>
             <Button
               size={'large'}
-              onPress={() => setSuccessful(true)}
+              onPress={() =>
+                dispatch(
+                  register({
+                    email: email,
+                    firstName: firstName,
+                    lastName: lastName,
+                    password: password,
+                  }),
+                )
+                  .then(unwrapResult)
+                  .then((result: any) => {
+                    if (result.id) {
+                      setSuccessful(true);
+                    }
+                  })
+                  .catch((registerError: any) => {
+                    console.error(registerError); // if there is an error
+                  })
+              }
               style={styles.button}
               disabled={
                 !checked ||
                 email.length === 0 ||
                 lastName.length === 0 ||
                 firstName.length === 0 ||
+                invalidEmail ||
                 password.length < 8
               }>
               Create account
@@ -117,7 +172,7 @@ const SignupScreen = () => {
 
 export default SignupScreen;
 
-const styles = StyleSheet.create({
+const styles = StyleService.create({
   wrapper: {flex: 1},
   container: {
     flex: 1,
@@ -131,6 +186,22 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     minHeight: height,
+  },
+  captionIcon: {
+    width: 25,
+    height: 25,
+    marginRight: 5,
+  },
+  captionText: {
+    fontSize: 12,
+    marginTop: 4,
+  },
+  captionContainer: {
+    display: 'flex',
+    flex: 1,
+    backgroundColor: 'white',
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   inputField: {
     marginVertical: 16,
