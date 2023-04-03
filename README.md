@@ -16,7 +16,7 @@ git clone https://github.com/your-username/react-native-project.git
 ```
 - Install the project dependencies:
 ```bash
-cd react-native-project
+cd assetapp
 npm install
 ```
 - Run the project:
